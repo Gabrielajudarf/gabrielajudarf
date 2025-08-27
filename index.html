@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RIFA BRASIL - Sorteios</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+const config = {
+  premiumValue: 600,
+  ticketValue: 32,
+  winningNumber: null,
+  reservedGroups: "[1.] [2.] [3.] [4.] [5.] [6.] [7] [8.] [9.] [10.] [11.] [12.] [13.] [14.] [15.] [16] [17.] [18.] [19.] [20.] [21.] [22.] [23.] [24.] [25.]",
+  pixKey: "00020126890014BR.GOV.BCB.PIX2567api-pix.bancobs2.com.br/spi/v2/3b86404e-029b-461c-b179-f24a32836a07520400005303986540532.325802BR5916Safetypay Brasil6014Belo Horizonte61083038040362070503***63046012",
+  pixImage: "https://i.ibb.co/d0QQK8K5/Screenshot-2025-08-27-12-37-25-543-com-moneybookers-skrillpayments.png" // QR Code
+};
+const animals = ["AVESTRUZ","ÁGUIA","BURRO","BORBOLETA","CACHORRO","CABRA","CARNEIRO","CAMELO","COBRA","COELHO","CAVALO","ELEFANTE","GALO","GATO","JACARÉ","LEÃO","MACACO","PORCO","PAVÃO","PERU","TOURO","TIGRE","URSO","VEADO","VACA"];
+let selectedGroup=null, userName=null;
+emailjs.init("BokFx4ywr5SIhVbb9");
+</script>
+<style>
+/* Aqui vai exatamente o mesmo CSS que você enviou, sem alterações */
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",sans-serif;}
+body{background: linear-gradient(135deg, #3fbfbf 0%, #2a8f8f 100%);color:#333;min-height:100vh;}
+.container{max-width:1000px;margin:auto;padding:20px;}
+.header{text-align:center;padding:25px;background:linear-gradient(90deg,#ff9ccf,#ffc1e3);color:white;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.2);margin-bottom:20px;position:relative;overflow:hidden;}
+.header::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg, #ff4d6d, #ff9ccf);}
+.header h1{font-size:2.2rem;margin-bottom:8px;text-shadow:1px 1px 5px rgba(0,0,0,0.2);}
+.header p{font-size:1rem;color:#fff;opacity:0.9;}
+.welcome-message{background:#fff0f6;padding:20px;border-radius:12px;box-shadow:0 5px 15px rgba(0,0,0,0.1);margin-bottom:20px;text-align:center;border-left:4px solid #ff4d6d;}
+.payment-btn, .copy-btn{background:linear-gradient(to right, #ff4d6d, #ff9ccf);color:white;border:none;padding:12px 20px;border-radius:8px;cursor:pointer;font-size:1rem;transition:all 0.3s ease;box-shadow:0 4px 10px rgba(0,0,0,0.15);font-weight:600;}
+.payment-btn:hover, .copy-btn:hover{transform:translateY(-2px);box-shadow:0 6px 15px rgba(0,0,0,0.2);}
+.prize-info{background:#fff0f6;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);margin-bottom:20px;text-align:center;border:1px solid rgba(255, 77, 109, 0.2);}
+.blocks-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:15px;margin-bottom:30px;}
+.block{background:#fff0f6;border-radius:12px;padding:15px;text-align:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.08);transition:all 0.3s ease;border:2px solid transparent;position:relative;}
+.block:hover{transform:translateY(-5px) scale(1.03);box-shadow:0 8px 20px rgba(0,0,0,0.15);border-color:#ff9ccf;}
+.block.reserved,.block.purchased{background:linear-gradient(45deg, #ff4d6d, #ff9ccf);color:white;cursor:not-allowed;font-size:0.8rem;font-weight:bold;}
+.block.purchased .block-animal{font-size:0.7rem;}
+.block-numbers{font-weight:bold;margin-bottom:8px;font-size:1.1rem;}
+.block-animal{font-size:0.9rem;color:#444;font-weight:500;}
+.modal, .confirm-modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;z-index:1000;animation:fadeIn 0.3s ease;}
+.modal-content, .confirm-content{background:white;padding:25px;border-radius:12px;text-align:center;max-width:400px;width:90%;box-shadow:0 8px 20px rgba(0,0,0,0.25);animation:slideIn 0.3s ease;}
+.modal-img{max-width:100%;border-radius:8px;margin-bottom:15px;border:1px solid #eee;}
+.close-modal, .confirm-btn{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;margin-top:10px;font-size:1rem;transition:0.3s;}
+.close-modal, .confirm-no{background:#dc3545;color:white;}
+.confirm-yes{background:#28a745;color:white;}
+.toast{position:fixed;top:20px;right:20px;background:#ff9ccf;color:white;padding:15px 20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.2);z-index:2000;display:none;animation:slideInRight 0.3s ease;}
+.footer-note{text-align:center;font-size:0.85rem;color:#fff;padding:25px 0;opacity:0.8;}
+input[name="username"]{width:80%;padding:12px;border-radius:8px;border:1px solid #ccc;margin-top:10px;box-shadow:0 2px 6px rgba(0,0,0,0.1);transition:all 0.3s ease;}
+input[name="username"]:focus{outline:none;border-color:#ff9ccf;box-shadow:0 0 0 3px rgba(255, 156, 207, 0.3);}
+@keyframes fadeIn {from { opacity: 0; } to { opacity: 1; }}
+@keyframes slideIn {from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; }}
+@keyframes slideInRight {from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; }}
+@media (max-width: 768px) {.blocks-container{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));} .header h1{font-size:1.8rem;}}
+@keyframes pulse {0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); }}
+.payment-btn{animation: pulse 2s infinite;}
+.copied {background: linear-gradient(to right, #28a745, #20c997) !important;}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>RIFA GABRIELA</h1>
+    <p>RESULTADO DO JOGO DO BICHO 19h - BA ASSIM QUE ENCHER</p>
+  </div>
+  <div class="welcome-message">
+    <p><strong>Seja bem-vindo!</strong> Clique no grupo que deseja para reservar assim que reserva faça pagamento e fique de olho no site pra acompanhar número vencendo</p>
+    <button class="payment-btn" id="showPaymentBtn">Clique aqui para ver a chave PIX</button>
+  </div>
+  <div class="prize-info">
+    <h2>Prêmio: R$ <span id="premiumValue"></span>,00</h2>
+    <p>Valor por cota: R$ <span id="ticketValue"></span>,00</p>
+  </div>
+  <div class="blocks-container" id="blocksContainer"></div>
+</div>
+
+<div class="modal" id="paymentModal">
+  <div class="modal-content">
+    <h2>Informações de Pagamento</h2>
+    <img class="modal-img" src="" id="pixImage" alt="PIX QR Code">
+    <p id="pixKeyDisplay" style="font-weight:bold;margin-bottom:10px;word-break:break-all;padding:10px;background:#f8f9fa;border-radius:6px;"></p>
+    <button class="copy-btn" id="copyPixBtn">Copiar Chave PIX</button>
+    <button class="close-modal" id="closePaymentModal">Fechar</button>
+  </div>
+</div>
+
+<div class="confirm-modal" id="confirmModal">
+  <div class="confirm-content">
+    <p id="confirmMessage"></p>
+    <div class="confirm-buttons">
+      <button class="confirm-btn confirm-yes" id="confirmYes">Sim</button>
+      <button class="confirm-btn confirm-no" id="confirmNo">Não</button>
+    </div>
+  </div>
+</div>
+
+<div class="confirm-modal" id="nameModal">
+  <div class="confirm-content">
+    <h3>Digite seu apelido ou nome</h3>
+    <input type="text" id="userNameInput" placeholder="Seu nome ou apelido">
+    <div class="confirm-buttons">
+      <button class="confirm-btn confirm-yes" id="submitName">Confirmar</button>
+      <button class="confirm-btn confirm-no" id="cancelName">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toastMessage"></div>
+<div class="footer-note">Esclarecemos que não temos vínculo com o serviço ou pessoas que operam o Jogo do Bicho e que os resultados e estatísticas são meramente informativos. Todos os direitos reservados - Copyright © 2025 Política de Privacidade / Termos de Uso</div>
+
+<script>
+function init(){
+  document.getElementById("premiumValue").textContent=config.premiumValue;
+  document.getElementById("ticketValue").textContent=config.ticketValue;
+  generateBlocks();
+  document.getElementById("showPaymentBtn").addEventListener("click",showPayment);
+  document.getElementById("closePaymentModal").addEventListener("click",closePaymentModal);
+  document.getElementById("copyPixBtn").addEventListener("click",copyPix);
+  document.getElementById("confirmYes").addEventListener("click",confirmReservation);
+  document.getElementById("confirmNo").addEventListener("click",()=>{document.getElementById("confirmModal").style.display="none";});
+  document.getElementById("submitName").addEventListener("click",submitUserName);
+  document.getElementById("cancelName").addEventListener("click",()=>{document.getElementById("nameModal").style.display="none";});
+}
+
+// Apenas alterações mínimas aqui
+function parseReservedGroups(reservedString){
+  const reservedArray=[];
+  for(let i=1;i<=25;i++){
+    const regex = new RegExp(`\\[${i}(\\.)?\\]`);
+    const match = reservedString.match(regex);
+    if(match){
+      reservedArray.push({num:i,reserved:!!match[1]});
+    }
+  }
+  return reservedArray;
+}
+
+function generateBlocks(){
+  const container=document.getElementById("blocksContainer");
+  container.innerHTML="";
+  const reservedGroups=parseReservedGroups(config.reservedGroups);
+  for(let i=1;i<=25;i++){
+    const block=document.createElement("div");
+    block.className="block";
+    block.dataset.block=i;
+    const startNum=(i-1)*4+1;
+    const numbers=[];
+    for(let j=0;j<4;j++){
+      let num=startNum+j;if(num>100)num=num-100;if(num===100)num=0;numbers.push(num.toString().padStart(2,"0"));
+    }
+    block.innerHTML=`<div class="block-numbers">${numbers.join("-")}</div><div class="block-animal">${animals[i-1]}</div>`;
+    const reservedInfo = reservedGroups.find(r=>r.num===i);
+    if(reservedInfo?.reserved){
+      block.classList.add("purchased");
+      block.querySelector(".block-animal").textContent="Já comprado";
+    }else{
+      block.addEventListener("click",()=>{openNameModal(i,numbers);});
+    }
+    container.appendChild(block);
+  }
+}
+
+// Outras funções permanecem idênticas
+function openNameModal(group,numbers){selectedGroup=group;const input=document.getElementById("userNameInput");input.value="";input.dataset.numbers=numbers.join(",");document.getElementById("nameModal").style.display="flex";input.focus();}
+function submitUserName(){const input=document.getElementById("userNameInput");const name=input.value.trim();if(name==="") return showToast("Digite um nome válido!");userName=name;const numbers=input.dataset.numbers.split(",");showConfirm(selectedGroup,numbers,userName);document.getElementById("nameModal").style.display="none";}
+function showConfirm(group,numbers,name){const msg=`${name}, tem certeza que deseja enviar o grupo ${group} para o nosso painel de pagamento?`;document.getElementById("confirmMessage").textContent=msg;document.getElementById("confirmModal").style.display="flex";}
+function confirmReservation(){const block=document.querySelector(`.block[data-block='${selectedGroup}']`);const numbers=getNumbersForGroup(selectedGroup);block.classList.add("purchased");block.innerHTML=`<div class="block-numbers">${numbers.join("-")}</div><div class="block-animal">Já comprado</div>`;sendEmailReservation(selectedGroup,animals[selectedGroup-1],numbers,userName);showToast(`Parabéns ${userName}! Seu grupo está confirmado. Aguarde o sorteio se for contemplado pelo mesmo meio de pagamento que você usou pra pagar onde vai receber prêmio.`);document.getElementById("confirmModal").style.display="none";}
+function sendEmailReservation(group,animalName,numbers,name){
+  const idText=`GRUPO-${group}-${animalName}-${generateRandomId()}`;
+  const data={
+    grupo: group,
+    animal: animalName,
+    numeros: numbers.join(", "),
+    id: idText,
+    premio: config.premiumValue,
+    valor_cota: config.ticketValue,
+    user: name,
+    date: new Date().toLocaleString('pt-BR')
+  };
+  emailjs.send("service_fz8vtta","template_qf7q88r",data).catch(err=>console.error(err));
+}
+
+function getNumbersForGroup(groupNumber){
+  const startNum=(groupNumber-1)*4+1;
+  const numbers=[];
+  for(let j=0;j<4;j++){
+    let num=startNum+j;
+    if(num>100) num=num-100;
+    if(num===100) num=0;
+    numbers.push(num.toString().padStart(2,"0"));
+  }
+  return numbers;
+}
+
+// ALTERAÇÃO: Tempo aumentado para 15 segundos (15000 milissegundos)
+function showToast(message){
+  const toast=document.getElementById("toastMessage");
+  toast.textContent=message;
+  toast.style.display="block";
+  setTimeout(()=>{toast.style.display="none";},15000); // Alterado de 4000 para 15000 (15 segundos)
+}
+
+function generateRandomId(length=6){
+  const chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let result="";
+  for(let i=0;i<length;i++){
+    result+=chars.charAt(Math.floor(Math.random()*chars.length));
+  }
+  return result;
+}
+
+function showPayment(){
+  const pixDisplay = document.getElementById('pixKeyDisplay');
+  pixDisplay.textContent = config.pixKey;
+  document.getElementById('pixImage').src = config.pixImage;
+  document.getElementById('paymentModal').style.display='flex';
+}
+
+function closePaymentModal(){
+  document.getElementById('paymentModal').style.display='none';
+}
+
+function copyPix(){
+  const key = config.pixKey;
+  navigator.clipboard.writeText(key)
+    .then(() => {
+      showToast("Por favor pressione em cima e copie a chave");
+      const btn = document.getElementById('copyPixBtn');
+      btn.textContent = "Copiado!";
+      btn.classList.add('copied');
+      setTimeout(()=>{
+        btn.textContent = "Copiar PIX";
+        btn.classList.remove('copied');
+      },2000);
+    })
+    .catch(()=>{
+      showToast("Por favor pressione em cima e copie a chave");
+    });
+}
+
+document.addEventListener("DOMContentLoaded",init);
+</script>
+</body>
+</html>
